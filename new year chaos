@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+void minimumBribes(int q_count, int* q) {
+    int bribes = 0;
+    
+    // Iterate from the end of the queue
+    for (int i = q_count - 1; i >= 0; i--) {
+        // Check for "Too chaotic" condition
+        if (q[i] - (i + 1) > 2) {
+            printf("Too chaotic\n");
+            return;
+        }
+        
+        // Count the number of people who bribed the current person.
+        // We only need to check people who are in front of q[i]
+        // and were originally located at most two positions behind.
+        // This is handled by starting the inner loop from max(0, q[i] - 2).
+        for (int j = fmax(0, q[i] - 2); j < i; j++) {
+            if (q[j] > q[i]) {
+                bribes++;
+            }
+        }
+    }
+    
+    printf("%d\n", bribes);
+}
+
+int main() {
+    int t;
+    scanf("%d", &t);
+    while (t--) {
+        int n;
+        scanf("%d", &n);
+        int* q = (int*)malloc(sizeof(int) * n);
+        for (int i = 0; i < n; i++) {
+            scanf("%d", &q[i]);
+        }
+        minimumBribes(n, q);
+        free(q);
+    }
+    return 0;
+}
