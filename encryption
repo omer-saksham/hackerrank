@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <stdlib.h>
+
+char* encryption(char* s) {
+    int len = 0;
+    for (int i = 0; s[i] != '\0'; i++) {
+        if (s[i] != ' ') {
+            len++;
+        }
+    }
+
+    char* no_spaces_s = (char*)malloc(sizeof(char) * (len + 1));
+    int k = 0;
+    for (int i = 0; s[i] != '\0'; i++) {
+        if (s[i] != ' ') {
+            no_spaces_s[k++] = s[i];
+        }
+    }
+    no_spaces_s[k] = '\0';
+    
+    double root_len = sqrt(len);
+    int rows = floor(root_len);
+    int cols = ceil(root_len);
+    
+    if (rows * cols < len) {
+        rows = cols;
+    }
+
+    char* encrypted_s = (char*)malloc(sizeof(char) * (len + cols + 1));
+    int e_k = 0;
+
+    for (int j = 0; j < cols; j++) {
+        for (int i = 0; i < rows; i++) {
+            int index = i * cols + j;
+            if (index < len) {
+                encrypted_s[e_k++] = no_spaces_s[index];
+            }
+        }
+        if (j < cols - 1) {
+            encrypted_s[e_k++] = ' ';
+        }
+    }
+    encrypted_s[e_k] = '\0';
+
+    free(no_spaces_s);
+    return encrypted_s;
+}
+
+int main() {
+    char s[100];
+    scanf("%[^\n]s", s);
+    
+    char* result = encryption(s);
+    printf("%s\n", result);
+    
+    free(result);
+    return 0;
+}
