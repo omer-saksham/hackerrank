@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    long long price;
+    int year;
+} PriceYear;
+
+int compare(const void *a, const void *b) {
+    PriceYear *p1 = (PriceYear*)a;
+    PriceYear *p2 = (PriceYear*)b;
+    if (p1->price < p2->price) return -1;
+    else if (p1->price > p2->price) return 1;
+    else return 0;
+}
+
+int main() {
+    int n;
+    scanf("%d", &n);
+    
+    PriceYear arr[n];
+    for (int i = 0; i < n; i++) {
+        scanf("%lld", &arr[i].price);
+        arr[i].year = i;
+    }
+
+    qsort(arr, n, sizeof(PriceYear), compare);
+
+    long long min_loss = 1000000000000000000LL; 
+    
+    for (int i = 1; i < n; i++) {
+        long long diff = arr[i].price - arr[i - 1].price;
+        if (arr[i - 1].year > arr[i].year && diff < min_loss) {
+            min_loss = diff;
+        }
+    }
+
+    printf("%lld\n", min_loss);
+
+    return 0;
+}
