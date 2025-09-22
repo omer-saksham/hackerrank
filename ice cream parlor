@@ -1,0 +1,36 @@
+#include <stdio.h>
+
+int main() {
+    int t;
+    scanf("%d", &t);
+
+    while (t--) {
+        int m, n;
+        scanf("%d", &m);
+        scanf("%d", &n);
+
+        int prices[n];
+        for (int i = 0; i < n; i++) {
+            scanf("%d", &prices[i]);
+        }
+
+        int found_i = -1, found_j = -1;
+
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (prices[i] + prices[j] == m) {
+                    found_i = i + 1;
+                    found_j = j + 1;
+                    break;
+                }
+            }
+            if (found_i != -1) {
+                break;
+            }
+        }
+
+        printf("%d %d\n", found_i, found_j);
+    }
+
+    return 0;
+}
