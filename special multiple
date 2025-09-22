@@ -1,0 +1,104 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Node {
+    char num[10000];
+    int remainder;
+    struct Node* next;
+} Node;
+
+typedef struct Queue {
+    Node *front, *rear;
+} Queue;
+
+void enqueue(Queue *q, char *num, int rem) {
+    Node *temp = (Node*)malloc(sizeof(Node));
+    strcpy(temp->num, num);
+    temp->remainder = rem;
+    temp->next = NULL;
+
+    if (q->rear == NULL) {
+        q->front = q->rear = temp;
+        return;
+    }
+
+    q->rear->next = temp;
+    q->rear = temp;
+}
+
+Node* dequeue(Queue *q) {
+    if (q->front == NULL) return NULL;
+
+    Node *temp = q->front;
+    q->front = q->front->next;
+
+    if (q->front == NULL) q->rear = NULL;
+
+    return temp;
+}
+
+char* specialMultiple(int n) {
+    if (n == 9) return "9";
+
+    int visited[n];
+    memset(visited, 0, sizeof(visited));
+
+    Queue q = {NULL, NULL};
+
+    char start[] = "9";
+    int rem = 9 % n;
+
+    enqueue(&q, start, rem);
+    visited[rem] = 1;
+
+    while (q.front != NULL) {
+        Node *curr = dequeue(&q);
+        if (curr->remainder == 0) {
+            char *result = (char*)malloc(strlen(curr->num) + 1);
+            strcpy(result, curr->num);
+            free(curr);
+            while (q.front != NULL) {
+                Node *tmp = dequeue(&q);
+                free(tmp);
+            }
+            return result;
+        }
+
+        int rem0 = (curr->remainder * 10) % n;
+        if (!visited[rem0]) {
+            visited[rem0] = 1;
+            char nextNum0[10000];
+            strcpy(nextNum0, curr->num);
+            strcat(nextNum0, "0");
+            enqueue(&q, nextNum0, rem0);
+        }
+
+        int rem9 = (curr->remainder * 10 + 9) % n;
+        if (!visited[rem9]) {
+            visited[rem9] = 1;
+            char nextNum9[10000];
+            strcpy(nextNum9, curr->num);
+            strcat(nextNum9, "9");
+            enqueue(&q, nextNum9, rem9);
+        }
+
+        free(curr);
+    }
+
+    return NULL;
+}
+
+int main() {
+    int t;
+    scanf("%d", &t);
+
+    while (t--) {
+        int n;
+        scanf("%d", &n);
+        char *res = specialMultiple(n);
+        printf("%s\n", res);
+        free(res);
+    }
+    return 0;
+}
