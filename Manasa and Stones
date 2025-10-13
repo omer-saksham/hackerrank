@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void solve() {
+    int n, a, b;
+    
+    if (scanf("%d %d %d", &n, &a, &b) != 3) {
+        return;
+    }
+    
+    int steps = n - 1;
+    
+    if (a == b) {
+        printf("%d\n", steps * a);
+        return;
+    }
+    
+    if (a > b) {
+        int temp = a;
+        a = b;
+        b = temp;
+    }
+    
+    int difference = b - a;
+    
+    int current_sum = steps * a;
+    
+    printf("%d", current_sum);
+    
+    for (int i = 1; i <= steps; i++) {
+        current_sum += difference;
+        printf(" %d", current_sum);
+    }
+    
+    printf("\n");
+}
+
+int main() {
+    int t;
+    
+    if (scanf("%d", &t) != 1) {
+        return 1;
+    }
+    
+    while (t--) {
+        solve();
+    }
+    
+    return 0;
+}
