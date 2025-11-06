@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+long long solve() {
+    int n, k;
+    if (scanf("%d %d", &n, &k) != 2) return 0;
+
+    int *count = (int *)calloc(k, sizeof(int));
+    if (count == NULL) return 0;
+
+    count[0] = 1; 
+    
+    int current_sum_mod = 0;
+    long long result = 0;
+    
+    for (int i = 0; i < n; i++) {
+        int a_i;
+        if (scanf("%d", &a_i) != 1) {
+            free(count);
+            return 0;
+        }
+
+        current_sum_mod = (current_sum_mod + a_i) % k;
+        if (current_sum_mod < 0) {
+            current_sum_mod += k;
+        }
+
+        result += count[current_sum_mod];
+        count[current_sum_mod]++;
+    }
+
+    free(count);
+    return result;
+}
+
+int main() {
+    int t;
+    if (scanf("%d", &t) != 1) return 1;
+
+    while (t--) {
+        printf("%lld\n", solve());
+    }
+
+    return 0;
+}
