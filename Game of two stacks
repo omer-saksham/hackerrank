@@ -1,0 +1,39 @@
+int twoStacks(int maxSum, int a_count, int* a, int b_count, int* b) {
+    int i = 0;
+    int j = 0;
+    int ans = 0;
+    
+    long long sum = 0; 
+
+   
+    while (i < a_count && sum + a[i] <= maxSum) {
+        sum += a[i];
+        i++;
+    }
+    ans = i;
+
+   
+    while (j < b_count) {
+        sum += b[j]; 
+        j++;
+
+       
+        while (sum > maxSum && i > 0) {
+            i--;
+            sum -= a[i]; 
+        }
+
+       
+        if (sum <= maxSum) {
+            if (i + j > ans) {
+                ans = i + j;
+            }
+        } 
+        
+        
+    }
+
+
+    return ans; 
+}
+
