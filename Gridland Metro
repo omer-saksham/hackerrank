@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef long long ll;
+
+struct T { ll r, c1, c2; };
+
+int cmp(const void *a, const void *b){
+    const struct T *x = a, *y = b;
+    if (x->r != y->r) return (x->r < y->r) ? -1 : 1;
+    if (x->c1 != y->c1) return (x->c1 < y->c1) ? -1 : 1;
+    if (x->c2 != y->c2) return (x->c2 < y->c2) ? -1 : 1;
+    return 0;
+}
+
+int main(){
+    ll n, m;
+    int k;
+    if (scanf("%lld %lld %d", &n, &m, &k)!=3) return 0;
+    struct T *a = NULL;
+    if (k>0){
+        a = malloc(sizeof(struct T)*k);
+        for (int i=0;i<k;i++){
+            scanf("%lld %lld %lld", &a[i].r, &a[i].c1, &a[i].c2);
+        }
+        qsort(a, k, sizeof(struct T), cmp);
+    }
+    unsigned long long covered = 0;
+    ll curR=0, curL=0, curRend=0;
+    for (int i=0;i<k;i++){
+        if (a[i].r != curR){
+            if (curR!=0) covered += (unsigned long long)(curRend - curL + 1);
+            curR = a[i].r;
+            curL = a[i].c1;
+            curRend = a[i].c2;
+        } else {
+            if (a[i].c1 > curRend + 1){
+                covered += (unsigned long long)(curRend - curL + 1);
+                curL = a[i].c1;
+                curRend = a[i].c2;
+            } else {
+                if (a[i].c2 > curRend) curRend = a[i].c2;
+            }
+        }
+    }
+    if (k>0 && curR!=0) covered += (unsigned long long)(curRend - curL + 1);
+    unsigned long long total = (unsigned long long)n * (unsigned long long)m;
+    unsigned long long freecells = total - covered;
+    printf("%llu\n", freecells);
+    free(a);
+    return 0;
+}
